@@ -1,0 +1,12 @@
+#searchinput{
+    outline-style:none; 
+    border-radius:3px;
+    padding: 2px;
+    width: 1000px;
+}
+.reset{
+    border-radius:3px;
+    outline-style:none;
+    padding:3px;
+}
+

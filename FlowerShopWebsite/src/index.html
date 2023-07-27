@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Pz</title>
+
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+  
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <h1 class="text-center">Flower Shop</h1>
+          <hr/>
+          <br/>
+        </div>
+      </div>
+      <div>
+        <label for="Color" id="color">Choose a color</label>
+        <Select name="Color" id="Color" onchange="Color()">
+          <option disable selected value>-- Select an option --</option>
+          <option value="Yellow">Yellow</option>
+          <option value="Purple">Purple</option>
+          <option value="Pink">Pink</option>
+          <option value="Black">Black</option>
+          <option value="Shimmer">Shimmer</option>
+          <option value="Cappucino">Cappucino</option>
+        </Select>
+      </div>
+      
+      <div>
+        <input id="searchinput"onkeydown="search()"/>
+          <button class="reset" type="button" onclick="reset()">reset</button>
+      </div>
+      <div id="flowerRow" class="row">
+      </div>
+    </div>
+
+    <div id="flowerTemplate" style="display: none;">
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <br/>
+        <br/>
+        <div class="panel panel-default panel-pet">
+          <div class="panel-heading">
+            <h3 class="panel-title"></h3>
+          </div>
+          <div class="panel-body">
+            <img class="img-rounded img-center" style="width: 100%;" data-holder-rendered="true">
+            <br/><br/>
+            
+            <strong>Size</strong>: <span class="size"></span><br/>
+            <strong>Color</strong>: <span class="color"></span><br/>
+            <strong>Location</strong>: <span class="pet-location"></span><br/>
+            <strong>Price</strong>: <span class="Price"></span><br/><br/>
+            <button class="btn btn-default btn-adopt" type="button" data-id="0">Buy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+  <script>
+    function Color(){
+      $.getJSON('pets.json',function(data){
+        var select = document.getElementById("Color").value;
+        var flowerRow = $('#flowerRow');
+        var flowerTemplate = $('#flowerTemplate');
+        flowerRow.empty();
+        for(i=0;i<data.length;i++){
+          if((data[i].color)==select){
+            flowerTemplate.find('.panel-title').text(data[i].name);
+            flowerTemplate.find('img').attr('src', data[i].picture);
+            flowerTemplate.find('.size').text(data[i].size);
+            flowerTemplate.find('.color').text(data[i].color);
+            flowerTemplate.find('.pet-location').text(data[i].location);
+            flowerTemplate.find('.btn-adopt').attr('data-id', data[i].id);
+            flowerRow.append(flowerTemplate.html());
+          }
+        }
+      });
+    }
+    
+ 
+    function search(){
+      $.getJSON('pets.json',function(data){
+        var name = document.getElementById("searchinput").value;
+        var flowerRow = $('#flowerRow');
+        var flowerTemplate = $('#flowerTemplate');
+        flowerRow.empty();
+
+        var count = 0;
+        if(name==""){
+          flowerRow.empty();
+        }else{
+              for(i=0;i<data.length;i++){
+                flowerRow = $('#flowerRow');
+                flowerTemplate = $('#flowerTemplate');
+                if((data[i].name).match(name)){
+                  flowerTemplate.find('.panel-title').text(data[i].name);
+                  flowerTemplate.find('img').attr('src', data[i].picture);
+                  flowerTemplate.find('.size').text(data[i].size);
+                  flowerTemplate.find('.color').text(data[i].color);
+                  flowerTemplate.find('.pet-location').text(data[i].location);
+                  flowerTemplate.find('.btn-adopt').attr('data-id', data[i].id);
+                  count++;
+                }   
+              }
+            }
+        if(count>0){
+          flowerRow.append(flowerTemplate.html());
+        }
+      });   
+    };
+
+    function reset(){
+      $.getJSON('../pets.json', function(data) {
+      var flowerRow = $('#flowerRow');
+      var flowerTemplate = $('#flowerTemplate');
+      flowerRow.empty();
+      for (i = 0; i < data.length; i ++) {
+        flowerTemplate.find('.panel-title').text(data[i].name);
+        flowerTemplate.find('img').attr('src', data[i].picture);
+        flowerTemplate.find('.size').text(data[i].size);
+        flowerTemplate.find('.color').text(data[i].color);
+        flowerTemplate.find('.pet-location').text(data[i].location);
+        flowerTemplate.find('.btn-adopt').attr('data-id', data[i].id);
+
+        flowerRow.append(flowerTemplate.html());
+      }
+    });
+    }
+  </script>
+</html>
